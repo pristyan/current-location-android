@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CurrentLocation</string>
+    <string name="msg_permission_rationale">Aplikasi membutuhkan akses lokasi. Izinkan dari akses melalui pengaturan</string>
+</resources>
