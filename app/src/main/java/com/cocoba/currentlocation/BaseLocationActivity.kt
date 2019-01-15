@@ -36,6 +36,7 @@ abstract class BaseLocationActivity : AppCompatActivity() {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             numUpdates = NUM_UPDATES
             maxWaitTime = MAX_WAIT_TIME
+            setExpirationDuration(MAX_WAIT_TIME)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +51,8 @@ abstract class BaseLocationActivity : AppCompatActivity() {
     }
 
     private var runnable = Runnable {
-        getCurrentLocation(callback)
+        /** this function will be called if location updates get timeout (> MAX_WAIT_TIME). */
+        getLastLocation(callback)
     }
 
     private fun initLocationCallback(myCallback: MyLocationCallback) {
@@ -61,6 +63,7 @@ abstract class BaseLocationActivity : AppCompatActivity() {
                 super.onLocationResult(result)
                 Log.i(TAG, "initLocationCallback -> onLocationResult")
 
+                /** if 1st try = fail (result = null), try the 2nd way, get from last known location */
                 if (result == null) {
                     getLastLocation(callback)
                     return
@@ -78,6 +81,7 @@ abstract class BaseLocationActivity : AppCompatActivity() {
         }
     }
 
+    /** 1st try -> get from location updates */
     fun getCurrentLocation(myCallback: MyLocationCallback) {
         try {
             Log.i(TAG, "startLocationUpdates")
